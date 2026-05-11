@@ -147,9 +147,9 @@ if __name__ == "__main__":
     git_init_and_push_all_branches(REPO_CREATED)
 
     if REPO_CREATED:
-        CONTEXTS = ["test-python"]
+        CONTEXTS = ["test-python / build"]
         if DOCS_TYPE == "sphinx":
-            CONTEXTS.append("build-docs")
+            CONTEXTS.append("build-docs / build")
         for BRANCH in BRANCHES:
             configure_branch_protection(OWNER, REPO, BRANCH, CONTEXTS)
 

@@ -397,9 +397,9 @@ if __name__ == "__main__":
             setup_develop_branch(REPO_CREATED)
 
         if REPO_CREATED and GIT_FLOW in ("github_flow", "main_develop"):
-            contexts = ["test-python"]
+            contexts = ["test-python / build"]
             if DOCS_TYPE == "sphinx":
-                contexts.append("build-docs")
+                contexts.append("build-docs / build")
             configure_branch_protection(OWNER, REPO, "main", contexts)
             if GIT_FLOW == "main_develop":
                 configure_branch_protection(OWNER, REPO, "develop", contexts)
