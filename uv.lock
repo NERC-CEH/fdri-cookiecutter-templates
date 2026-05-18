@@ -258,7 +258,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fdri-cookiecutter-pypackage"
+name = "fdri-cookiecutter-templates"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

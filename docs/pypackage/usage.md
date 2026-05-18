@@ -15,7 +15,7 @@ Install [uv, Python 3.12+, make, and git](../prerequisites.md) first.
 Run the template with `uvx` (no install needed beyond uv):
 
 ```bash
-uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-pypackage --directory=pypackage
+uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-templates --directory=pypackage
 ```
 
 ## Prompts

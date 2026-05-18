@@ -1,10 +1,10 @@
 [project]
-name = "fdri-cookiecutter-pypackage"
+name = "fdri-cookiecutter-templates"
 version = "0.1.0"
-description = "FDRI Cookiecutter template for a Python package"
+description = "FDRI Cookiecutter templates for Python packages and services"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "GNU GPL v3.0" }
+license = { text = "MIT" }
 authors = [
     { name = "Richard Smith", email = "ricsmi@ceh.ac.uk" }
 ]

@@ -53,10 +53,10 @@ coverage:  ## Run tests with coverage report
 	uv run coverage html
 
 docs-serve:  ## Serve docs locally with live reload
-	uv run --group docs sphinx-autobuild docs/ docs/_build/html
+	uv run --with mkdocs-material mkdocs serve
 
 docs-build:  ## Build docs
-	uv run --group docs sphinx-build -b html -W docs/ docs/_build/html
+	uv run --with mkdocs-material mkdocs build
 
 clean: clean-build clean-pyc clean-test  ## Remove all build, test, and Python artifacts
 

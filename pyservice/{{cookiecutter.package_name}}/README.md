@@ -62,4 +62,4 @@ If you use this software, please cite it using the metadata in [`CITATION.cff`](
 
 {{ cookiecutter.license }}
 
-Built with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and the [NERC-CEH/fdri-cookiecutter-pypackage](https://github.com/NERC-CEH/fdri-cookiecutter-pypackage) template (`pyservice`).
+Built with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and the [NERC-CEH/fdri-cookiecutter-templates](https://github.com/NERC-CEH/fdri-cookiecutter-templates) template (`pyservice`).

@@ -1,0 +1,27 @@
+site_name: FDRI Cookiecutter Templates
+site_url: https://nerc-ceh.github.io/fdri-cookiecutter-templates/
+repo_url: https://github.com/NERC-CEH/fdri-cookiecutter-templates
+repo_name: NERC-CEH/fdri-cookiecutter-templates
+docs_dir: docs
+
+theme:
+  name: material
+  logo: assets/fdri_logo.png
+
+nav:
+  - Home: index.md
+  - Prerequisites: prerequisites.md
+  - After generation: after-generation.md
+  - pypackage:
+    - Usage: pypackage/usage.md
+    - GitHub setup: pypackage/usage-github.md
+    - Codeberg setup: pypackage/usage-codeberg.md
+    - Git flows: pypackage/git-flows.md
+    - Releasing: pypackage/releasing.md
+    - Troubleshooting: pypackage/troubleshooting.md
+  - pyservice:
+    - Usage: pyservice/usage.md
+    - GitHub and AWS setup: pyservice/usage-github.md
+    - Git flow: pyservice/git-flows.md
+    - Releasing: pyservice/releasing.md
+  - Design decisions: design_decisions.md

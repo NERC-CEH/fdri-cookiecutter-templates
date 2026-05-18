@@ -1,11 +1,38 @@
 # FDRI Cookiecutter Templates
 
+This repo provides [Cookiecutter](https://cookiecutter.readthedocs.io/) templates for starting new Python projects at
+UKCEH/FDRI.
+
+## What is a Cookiecutter template?
+
+[Cookiecutter](https://cookiecutter.readthedocs.io/) is a tool that generates a new project from a template. You run one
+command, answer a few prompts (project name, author, etc.), and it produces a fully-structured project directory - ready
+to use, with all the boilerplate already in place.
+
+These templates encode the tooling choices, CI pipelines, and project conventions agreed on for
+FDRI Python projects. The goal is that every new project starts from the same solid foundation, so you spend time
+writing code rather than configuring tools.
+
+## What do the templates give you?
+
+Both templates come with:
+
+- **`uv`** for dependency management and packaging
+- **`ruff`** for linting and formatting
+- **`pytest`** and **`coverage`** for testing
+- **`pyright`** for type checking
+- **`make`** targets to run all of the above with one command
+- **GitHub Actions** CI that runs on every PR
+- A standard project layout, changelog, and citation metadata
+
+## Which template should I use?
+
 Two templates live in this repo. Choose based on what you're building:
 
 | Template                          | Use when                                                                                 | Quick start                                                                      |
 |-----------------------------------|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| [`pypackage`](pypackage/usage.md) | Building a Python library - something other projects import, or a tool published to PyPI | `uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-pypackage --directory=pypackage` |
-| [`pyservice`](pyservice/usage.md) | Building a Python service deployed to FDRI AWS - runs as a container                     | `uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-pypackage --directory=pyservice` |
+| [`pypackage`](pypackage/usage.md) | Building a Python library - something other projects import, or a tool published to PyPI | `uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-templates --directory=pypackage` |
+| [`pyservice`](pyservice/usage.md) | Building a Python service deployed to FDRI AWS - runs as a container                     | `uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-templates --directory=pyservice` |
 
 If you are unsure, ask!
 
@@ -33,4 +60,3 @@ If you are unsure, ask!
 ## Repo notes
 
 - [Design decisions](design_decisions.md) - why we made the choices we did
-- Repo currently named `fdri-cookiecutter-pypackage` for historical reasons; a rename to `fdri-cookiecutter` is planned

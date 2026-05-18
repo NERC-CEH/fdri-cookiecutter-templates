@@ -56,7 +56,7 @@ testing, docs build, docs deploy. An additional local workflow handles the (opti
 + `autosummary` generate API reference pages from docstrings without requiring a separate tool.
 
 [MyST-Parser](https://myst-parser.readthedocs.io/) is included so documentation pages can be written in either Markdown (`.md`) or reStructuredText
-(`.rst`) - see [Writing docs](pypackage/usage.md#writing-docs) in the usage guide.
+(`.rst`) - see [Writing docs](after-generation.md#writing-docs) in the after generation guide.
 
 ### Shibuya theme
 Using a theme allows us to have consistency across FDRI packages.

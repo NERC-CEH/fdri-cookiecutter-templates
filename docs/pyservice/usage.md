@@ -21,7 +21,7 @@ See [GitHub and AWS setup](usage-github.md) for the full prerequisite list, incl
 ## Generating a project
 
 ```bash
-uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-pypackage --directory=pyservice
+uvx cookiecutter gh:NERC-CEH/fdri-cookiecutter-templates --directory=pyservice
 ```
 
 ## Prompts
