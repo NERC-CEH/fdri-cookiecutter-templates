@@ -75,17 +75,19 @@ def test_bake_with_defaults(cookies):
     assert "tests" in found_toplevel_files
 
 
-def test_bake_and_run_tests(cookies):
+def test_bake_and_run_tests(cookies, inject_lock):
     result = cookies.bake()
     assert result.project_path.is_dir()
+    inject_lock(result.project_path)
     run_inside_dir("uv run pytest", str(result.project_path))
 
 
 @pytest.mark.parametrize("git_hosting", ["github", "codeberg", "none"])
-def test_bake_and_run_ruff(cookies, git_hosting):
+def test_bake_and_run_ruff(cookies, inject_lock, git_hosting):
     """Baked project passes ruff linting and formatting out of the box."""
     result = cookies.bake(extra_context={"git_hosting": git_hosting})
     assert result.project_path.is_dir()
+    inject_lock(result.project_path)
     run_inside_dir("uv run ruff check .", str(result.project_path))
     run_inside_dir("uv run ruff format --check --diff .", str(result.project_path))
 
@@ -97,10 +99,11 @@ def test_bake_and_run_ruff(cookies, git_hosting):
         "O'connor",
     ],
 )
-def test_bake_special_full_name_and_run_tests(cookies, full_name):
+def test_bake_special_full_name_and_run_tests(cookies, inject_lock, full_name):
     """Special characters in full_name must not break pyproject.toml."""
     result = cookies.bake(extra_context={"full_name": full_name})
     assert result.exit_code == 0, result.exception
+    inject_lock(result.project_path)
     run_inside_dir("uv run pytest", str(result.project_path))
 
 

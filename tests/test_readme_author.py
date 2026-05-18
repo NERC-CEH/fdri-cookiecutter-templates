@@ -50,7 +50,7 @@ def test_readme_references_fdri_template(cookies):
     result = cookies.bake()
     assert result.exit_code == 0
     readme = (result.project_path / "README.md").read_text()
-    assert "NERC-CEH/fdri-cookiecutter-pypackage" in readme
+    assert "NERC-CEH/fdri-cookiecutter-templates" in readme
 
 
 def test_readme_sphinx_docs_section_present_for_sphinx(cookies):

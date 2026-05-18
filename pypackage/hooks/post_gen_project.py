@@ -329,6 +329,8 @@ def print_pypi_trusted_publisher_instructions() -> None:
 
 
 if __name__ == "__main__":
+    _TEST_MODE = bool(os.environ.get("COOKIECUTTER_TEST_MODE"))
+
     stamp_year()
     select_license("{{ cookiecutter.license }}")
 
@@ -341,39 +343,41 @@ if __name__ == "__main__":
     if GIT_HOSTING == "codeberg":
         shutil.rmtree(".github", ignore_errors=True)
 
-        CODEBERG_USER = preflight_codeberg()
-        REPO_CREATED = CODEBERG_USER is not None and create_codeberg_repo(CODEBERG_USER)
+        if not _TEST_MODE:
+            CODEBERG_USER = preflight_codeberg()
+            REPO_CREATED = CODEBERG_USER is not None and create_codeberg_repo(CODEBERG_USER)
 
-        TOKEN = os.environ.get("CODEBERG_TOKEN", "")
-        AUTH_URL = f"https://oauth2:{TOKEN}@codeberg.org/{OWNER}/{REPO}.git" if REPO_CREATED else None
-        SKIP_RESET = GIT_FLOW == "main_develop"
+            TOKEN = os.environ.get("CODEBERG_TOKEN", "")
+            AUTH_URL = f"https://oauth2:{TOKEN}@codeberg.org/{OWNER}/{REPO}.git" if REPO_CREATED else None
+            SKIP_RESET = GIT_FLOW == "main_develop"
 
-        generate_uv_lock()
-        git_init_and_push(REPO_CREATED, remote_url=AUTH_URL, clean_url_override=AUTH_URL if SKIP_RESET else None)
+            generate_uv_lock()
+            git_init_and_push(REPO_CREATED, remote_url=AUTH_URL, clean_url_override=AUTH_URL if SKIP_RESET else None)
 
-        if GIT_FLOW == "main_develop":
-            setup_develop_branch(REPO_CREATED, auth_url=AUTH_URL)
+            if GIT_FLOW == "main_develop":
+                setup_develop_branch(REPO_CREATED, auth_url=AUTH_URL)
 
-        if not REPO_CREATED:
-            print_codeberg_instructions()
+            if not REPO_CREATED:
+                print_codeberg_instructions()
 
     elif GIT_HOSTING == "none":
         shutil.rmtree(".github", ignore_errors=True)
 
-        generate_uv_lock()
-        git_init_and_push(False)
+        if not _TEST_MODE:
+            generate_uv_lock()
+            git_init_and_push(False)
 
-        if GIT_FLOW == "main_develop":
-            setup_develop_branch(False)
+            if GIT_FLOW == "main_develop":
+                setup_develop_branch(False)
 
-        print()
-        print("  Local git repository initialised. No remote configured.")
-        print("  When you're ready to publish, add a remote:")
-        print("    git remote add origin <url>")
-        print("    git push -u origin main")
-        if GIT_FLOW == "main_develop":
-            print("    git push -u origin develop")
-        print()
+            print()
+            print("  Local git repository initialised. No remote configured.")
+            print("  When you're ready to publish, add a remote:")
+            print("    git remote add origin <url>")
+            print("    git push -u origin main")
+            if GIT_FLOW == "main_develop":
+                print("    git push -u origin develop")
+            print()
 
     else:  # github
         if PUBLISH_TO_PYPI != "yes":
@@ -381,30 +385,31 @@ if __name__ == "__main__":
             if os.path.exists(publish_yml):
                 os.remove(publish_yml)
 
-        REPO_CREATED = False
-        if preflight_github(OWNER, REPO, warn_branch_protection=GIT_FLOW in ("github_flow", "main_develop")):
-            REPO_CREATED = create_github_repo(OWNER, REPO, DESCRIPTION, default_visibility="public")
-            if REPO_CREATED:
-                if DOCS_TYPE == "sphinx":
-                    enable_github_pages(OWNER, REPO)
-                if PUBLISH_TO_PYPI == "yes":
-                    create_pypi_environment()
+        if not _TEST_MODE:
+            REPO_CREATED = False
+            if preflight_github(OWNER, REPO, warn_branch_protection=GIT_FLOW in ("github_flow", "main_develop")):
+                REPO_CREATED = create_github_repo(OWNER, REPO, DESCRIPTION, default_visibility="public")
+                if REPO_CREATED:
+                    if DOCS_TYPE == "sphinx":
+                        enable_github_pages(OWNER, REPO)
+                    if PUBLISH_TO_PYPI == "yes":
+                        create_pypi_environment()
 
-        generate_uv_lock()
-        git_init_and_push(REPO_CREATED)
+            generate_uv_lock()
+            git_init_and_push(REPO_CREATED)
 
-        if GIT_FLOW == "main_develop":
-            setup_develop_branch(REPO_CREATED)
-
-        if REPO_CREATED and GIT_FLOW in ("github_flow", "main_develop"):
-            contexts = ["test-python / build"]
-            if DOCS_TYPE == "sphinx":
-                contexts.append("build-docs / build")
-            configure_branch_protection(OWNER, REPO, "main", contexts)
             if GIT_FLOW == "main_develop":
-                configure_branch_protection(OWNER, REPO, "develop", contexts)
+                setup_develop_branch(REPO_CREATED)
 
-        if PUBLISH_TO_PYPI == "yes":
-            print_pypi_trusted_publisher_instructions()
+            if REPO_CREATED and GIT_FLOW in ("github_flow", "main_develop"):
+                contexts = ["test-python / build"]
+                if DOCS_TYPE == "sphinx":
+                    contexts.append("build-docs / build")
+                configure_branch_protection(OWNER, REPO, "main", contexts)
+                if GIT_FLOW == "main_develop":
+                    configure_branch_protection(OWNER, REPO, "develop", contexts)
+
+            if PUBLISH_TO_PYPI == "yes":
+                print_pypi_trusted_publisher_instructions()
 
     print("Your Python package project has been created successfully!")

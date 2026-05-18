@@ -127,6 +127,8 @@ def print_secrets_instructions() -> None:
 
 
 if __name__ == "__main__":
+    _TEST_MODE = bool(os.environ.get("COOKIECUTTER_TEST_MODE"))
+
     stamp_year()
     select_license("{{ cookiecutter.license }}")
 
@@ -136,22 +138,24 @@ if __name__ == "__main__":
         with open("docs/index.md", "w") as f:
             f.write(f"# {REPO}\n\nAdd your documentation here.\n")
 
-    REPO_CREATED = False
-    if preflight_github(OWNER, REPO, warn_branch_protection=True):
-        REPO_CREATED = create_github_repo(OWNER, REPO, DESCRIPTION, default_visibility="private")
+    if not _TEST_MODE:
+        REPO_CREATED = False
+        if preflight_github(OWNER, REPO, warn_branch_protection=True):
+            REPO_CREATED = create_github_repo(OWNER, REPO, DESCRIPTION, default_visibility="private")
+            if REPO_CREATED:
+                if DOCS_TYPE == "sphinx":
+                    enable_github_pages(OWNER, REPO)
+
+        generate_uv_lock()
+        git_init_and_push_all_branches(REPO_CREATED)
+
         if REPO_CREATED:
+            CONTEXTS = ["test-python / build"]
             if DOCS_TYPE == "sphinx":
-                enable_github_pages(OWNER, REPO)
+                CONTEXTS.append("build-docs / build")
+            for BRANCH in BRANCHES:
+                configure_branch_protection(OWNER, REPO, BRANCH, CONTEXTS)
 
-    generate_uv_lock()
-    git_init_and_push_all_branches(REPO_CREATED)
+        print_secrets_instructions()
 
-    if REPO_CREATED:
-        CONTEXTS = ["test-python / build"]
-        if DOCS_TYPE == "sphinx":
-            CONTEXTS.append("build-docs / build")
-        for BRANCH in BRANCHES:
-            configure_branch_protection(OWNER, REPO, BRANCH, CONTEXTS)
-
-    print_secrets_instructions()
     print("Your Python service project has been created successfully!")

@@ -216,6 +216,9 @@ def configure_branch_protection(owner: str, repo: str, branch: str, contexts: li
 
 def generate_uv_lock() -> None:
     """Generate uv.lock so CI's ``uv sync --locked`` has a pinned lockfile to validate against."""
+    if os.environ.get("SKIP_UV_LOCK"):
+        return
+
     if not shutil.which("uv"):
         print("  uv not found - skipping uv.lock generation.")
         print("  Install uv and run 'uv lock' before pushing, or CI will fail.")
