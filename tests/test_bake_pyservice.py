@@ -24,10 +24,10 @@ def test_has_src_and_tests(cookies):
     assert "tests" in names
 
 
-def test_no_release_script(cookies):
-    """release.py is pypackage-only."""
+def test_has_release_script(cookies):
+    """release.py is included in pyservice."""
     result = cookies.bake(template=PYSERVICE)
-    assert not (result.project_path / "scripts" / "release.py").exists()
+    assert (result.project_path / "scripts" / "release.py").exists()
 
 
 def test_no_publish_workflow(cookies):

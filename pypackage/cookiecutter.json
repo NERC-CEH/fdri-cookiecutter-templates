@@ -14,7 +14,9 @@
   "publish_to_pypi": ["{% if cookiecutter.git_hosting != 'none' %}no{% else %}n/a{% endif %}", "{% if cookiecutter.git_hosting != 'none' %}yes{% else %}n/a{% endif %}"],
   "git_flow": ["simple", "github_flow", "main_develop"],
   "docs_type": ["sphinx", "simple"],
+  "auto_release": ["{% if cookiecutter.git_hosting == 'github' %}yes{% else %}n/a{% endif %}", "{% if cookiecutter.git_hosting == 'github' %}no{% else %}n/a{% endif %}"],
   "__prompts__": {
-    "publish_to_pypi": "publish_to_pypi (only applicable for GitHub hosting)"
+    "publish_to_pypi": "publish_to_pypi (only applicable for GitHub hosting)",
+    "auto_release": "auto_release (only applicable for GitHub hosting)"
   }
 }

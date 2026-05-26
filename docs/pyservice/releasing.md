@@ -1,6 +1,6 @@
 # Releasing
 
-pyservice has no PyPI publishing. A "release" means a new version is deployed to production via the normal promotion flow.
+pyservice has no PyPI publishing. A "release" means a new version is deployed to production and optionally tagged as a GitHub Release.
 
 ## Bumping the version
 
@@ -25,9 +25,33 @@ Deployment is triggered by merging through the branch chain - there is no separa
 1. Merge your feature PR into `staging` - deploys to staging
 2. Review and merge the auto-PR `staging -> production` - deploys to production
 
-Tag the commit on `production` after it reaches production if you want a named checkpoint:
+## Auto-release (if `auto_release=yes`)
+
+If you chose `auto_release=yes`, a GitHub Release is created automatically on every merge to `production`.
+
+The generated project includes two workflows:
+
+- **`pr-checks.yml`** - runs on PRs targeting `production`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub.
+- **`release.yml`** - runs on push to `production`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
+
+The branch protection rules applied during project generation include `release-ready` as a required status check.
+
+**Workflow:**
 
 ```bash
-git tag v<version>
-git push origin v<version>
+# 1. On a branch - bump version and write changelog
+make bump-patch   # or bump-minor / bump-major
+# Fill in CHANGELOG/<version>.md, commit, and open a PR to staging as normal
+
+# 2. Once merged to staging and promoted to production - the release workflow runs automatically
 ```
+
+## Manual release (if `auto_release=no`)
+
+```bash
+# After your changes reach production
+git checkout production && git pull origin production
+make release
+```
+
+This tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.

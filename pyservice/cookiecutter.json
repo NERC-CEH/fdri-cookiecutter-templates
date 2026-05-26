@@ -11,6 +11,7 @@
   "first_version": "0.1.0",
   "license": ["MIT", "GNU GPL v3.0"],
   "docs_type": ["sphinx", "simple"],
+  "auto_release": ["yes", "no"],
   "_git_hosting": "github",
   "_git_flow": "staging_production",
   "_publish_to_pypi": "no"

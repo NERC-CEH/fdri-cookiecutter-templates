@@ -38,6 +38,7 @@ PUBLISH_TO_PYPI = "{{ cookiecutter.publish_to_pypi }}"
 DOCS_TYPE = "{{ cookiecutter.docs_type }}"
 GIT_FLOW = "{{ cookiecutter.git_flow }}"
 GIT_HOSTING = "{{ cookiecutter.git_hosting }}"
+AUTO_RELEASE = "{{ cookiecutter.auto_release }}"
 DESCRIPTION = "{{ cookiecutter.project_short_description | replace('\"', '\\\"') }}"
 
 
@@ -65,6 +66,9 @@ def _build_commit_message() -> str:
 
     if PUBLISH_TO_PYPI == "yes" and GIT_HOSTING == "github":
         lines.append("- .github/workflows/publish.yml (PyPI trusted publishing)")
+
+    if AUTO_RELEASE == "yes" and GIT_HOSTING == "github":
+        lines.append("- .github/workflows/pr-checks.yml, release.yml (auto-release on merge to main)")
 
     lines += [
         "- Makefile with development tasks",
@@ -385,6 +389,15 @@ if __name__ == "__main__":
             if os.path.exists(publish_yml):
                 os.remove(publish_yml)
 
+        if AUTO_RELEASE != "yes":
+            for f in ["pr-checks.yml", "release.yml"]:
+                path = os.path.join(".github", "workflows", f)
+                if os.path.exists(path):
+                    os.remove(path)
+            actions_dir = os.path.join(".github", "actions")
+            if os.path.exists(actions_dir):
+                shutil.rmtree(actions_dir)
+
         if not _TEST_MODE:
             REPO_CREATED = False
             if preflight_github(OWNER, REPO, warn_branch_protection=GIT_FLOW in ("github_flow", "main_develop")):
@@ -405,6 +418,8 @@ if __name__ == "__main__":
                 contexts = ["test-python / build"]
                 if DOCS_TYPE == "sphinx":
                     contexts.append("build-docs / build")
+                if AUTO_RELEASE == "yes":
+                    contexts.append("release-ready")
                 configure_branch_protection(OWNER, REPO, "main", contexts)
                 if GIT_FLOW == "main_develop":
                     configure_branch_protection(OWNER, REPO, "develop", contexts)

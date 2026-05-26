@@ -32,6 +32,7 @@ REPO = "{{ cookiecutter.package_name }}"
 IMPORT_NAME = "{{ cookiecutter.import_name }}"
 FIRST_VERSION = "{{ cookiecutter.first_version }}"
 DOCS_TYPE = "{{ cookiecutter.docs_type }}"
+AUTO_RELEASE = "{{ cookiecutter.auto_release }}"
 DESCRIPTION = "{{ cookiecutter.project_short_description | replace('\"', '\\\"') }}"
 
 BRANCHES = ["staging", "production"]
@@ -51,13 +52,15 @@ def _build_commit_message() -> str:
         "- Dockerfile (uv-based multi-stage)",
         "- .github/workflows/pipeline.yml (test + build/deploy docker, auto-PR staging->production)",
     ]
+    if AUTO_RELEASE == "yes":
+        lines.append("- .github/workflows/pr-checks.yml, release.yml (auto-release on merge to production)")
     if DOCS_TYPE == "sphinx":
         lines.append("- docs/ with Sphinx configuration and Shibuya theme")
     else:
         lines.append("- docs/ placeholder")
     lines += [
         "- Makefile with development tasks",
-        "- scripts/bump.py",
+        "- scripts/bump.py, scripts/release.py",
         "- pyproject.toml, uv.lock",
         f"- CHANGELOG/{FIRST_VERSION}.md",
         "- LICENSE",
@@ -132,6 +135,15 @@ if __name__ == "__main__":
     stamp_year()
     select_license("{{ cookiecutter.license }}")
 
+    if AUTO_RELEASE != "yes":
+        for f in ["pr-checks.yml", "release.yml"]:
+            path = os.path.join(".github", "workflows", f)
+            if os.path.exists(path):
+                os.remove(path)
+        actions_dir = os.path.join(".github", "actions")
+        if os.path.exists(actions_dir):
+            shutil.rmtree(actions_dir)
+
     if DOCS_TYPE == "simple":
         shutil.rmtree("docs", ignore_errors=True)
         os.makedirs("docs")
@@ -153,6 +165,8 @@ if __name__ == "__main__":
             CONTEXTS = ["test-python / build"]
             if DOCS_TYPE == "sphinx":
                 CONTEXTS.append("build-docs / build")
+            if AUTO_RELEASE == "yes":
+                CONTEXTS.append("release-ready")
             for BRANCH in BRANCHES:
                 configure_branch_protection(OWNER, REPO, BRANCH, CONTEXTS)
 

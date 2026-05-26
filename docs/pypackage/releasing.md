@@ -1,58 +1,85 @@
 # Releasing
 
-## Git host
+A "release" means tagging a version and creating a GitHub Release (or Codeberg/local tag depending on hosting).
 
-The release flow is the same regardless of hosting. The difference is what `make release` does at the end:
+## Bumping the version
+
+```bash
+make bump-patch   # 0.1.0 -> 0.1.1
+make bump-minor   # 0.1.0 -> 0.2.0
+make bump-major   # 0.1.0 -> 1.0.0
+```
+
+Each command:
+
+1. Bumps the version in `pyproject.toml`
+2. Creates a CHANGELOG stub at `CHANGELOG/<new_version>.md`
+3. Commits both with a standard message
+
+Fill in the CHANGELOG stub before opening your PR.
+
+## Auto-release (if `auto_release=yes`, GitHub only)
+
+If you chose `auto_release=yes`, releases are fully automated - no manual `make release` needed.
+
+The generated project includes two workflows:
+
+- **`pr-checks.yml`** - runs on every PR targeting `main`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub. PRs without a version bump pass unconditionally.
+- **`release.yml`** - runs on every push to `main`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
+
+The branch protection rules applied during project generation include `release-ready` as a required status check.
+
+**Workflow:**
+
+```bash
+# 1. On a branch - bump version and write changelog
+make bump-patch   # or bump-minor / bump-major
+# Fill in CHANGELOG/<version>.md, commit, and open a PR as normal
+
+# 2. After the PR is merged to main - the release workflow runs automatically
+```
+
+## Manual release (if `auto_release=no`)
+
+The release flow depends on which [git flow](git-flows.md) you chose, and what `make release` does varies by hosting:
 
 - **GitHub** - tags, pushes, and creates a GitHub Release with the CHANGELOG as release notes
 - **Codeberg** - tags, pushes, and prints the URL to create a Codeberg Release from the web UI
-- **none** - creates a local annotated tag only (no remote to push to)
-
-
-## Branching workflow
-
-The release flow differs depending on which [git flow](git-flows.md) you have chosen:
+- **none** - creates a local annotated tag only
 
 ### simple / github_flow
 
 ```bash
-# 1. Bump version and create CHANGELOG stub
-make bump-patch   # 0.1.0 -> 0.1.1  (or bump-minor / bump-major)
-
-# 2. Fill in CHANGELOG/<version>.md with release notes, then commit and push
+# 1. Bump version and write changelog (on a branch)
+make bump-patch   # or bump-minor / bump-major
 git add CHANGELOG/<version>.md
 git commit -m "Add release notes for <version>"
-git push origin main    # skip for git_hosting=none
+git push origin <branch>
 
-# 3. Tag and release
+# 2. Merge the PR, then tag and release from main
+git checkout main && git pull origin main
 make release
 ```
 
 ### main_develop
 
 ```bash
-# 1. On develop, bump version and create CHANGELOG stub
+# 1. On develop, bump version and write changelog
 git checkout develop && git pull origin develop
 make bump-patch
-
-# 2. Fill in CHANGELOG/<version>.md, commit and push
 git add CHANGELOG/<version>.md
 git commit -m "Add release notes for <version>"
-git push origin develop    # skip for git_hosting=none
+git push origin develop
 
-# 3. Open a release PR - run from develop, does NOT tag yet
-make release   # detects you're on develop: opens a PR instead of tagging
+# 2. Open a release PR - run from develop, does NOT tag yet
+make release   # detects you're on develop: opens a PR to main instead of tagging
 
-# 4. After the PR is merged, create the tag - run from main
+# 3. After the PR is merged, create the tag from main
 git checkout main && git pull origin main
 make release   # detects you're on main: tags and releases
 ```
 
-`make release` detects which branch you're on and does the right thing - PR when on `develop`, tag when on `main`.
-This keeps `main` exactly in sync with what is published.
-
-For `git_hosting=none`, step 3 is replaced by `git checkout main && git merge develop`, then step 4 creates a local
-tag.
+For `git_hosting=none`, step 2 is replaced by `git checkout main && git merge develop`, then step 3 creates a local tag.
 
 ---
 
