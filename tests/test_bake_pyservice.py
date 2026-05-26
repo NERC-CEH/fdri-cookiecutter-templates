@@ -1,6 +1,7 @@
 """Bake tests for the pyservice template."""
 
 import os
+from pathlib import Path
 
 PYSERVICE = os.path.abspath("pyservice")
 
@@ -33,6 +34,13 @@ def test_no_publish_workflow(cookies):
     """publish.yml is pypackage-only."""
     result = cookies.bake(template=PYSERVICE)
     assert not (result.project_path / ".github" / "workflows" / "publish.yml").exists()
+
+
+def test_hook_uses_repo_dir_not_template():
+    """Hook must use _repo_dir (always a local path) not _template (may be a GitHub URL)."""
+    hook = (Path(PYSERVICE) / "hooks" / "post_gen_project.py").read_text()
+    assert "cookiecutter._repo_dir" in hook
+    assert "cookiecutter._template" not in hook
 
 
 def test_shared_contributing_git_flow(cookies):
