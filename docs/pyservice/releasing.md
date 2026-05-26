@@ -31,8 +31,8 @@ If you chose `auto_release=yes`, a GitHub Release is created automatically on ev
 
 The generated project includes two workflows:
 
-- **`pr-checks.yml`** - runs on PRs targeting `production`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub.
-- **`release.yml`** - runs on push to `production`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
+- **`release-ready` job** (in `pipeline.yml`) - runs on PRs targeting `production`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub.
+- **`release` job** (in `pipeline.yml`) - runs on push to `production`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
 
 The branch protection rules applied during project generation include `release-ready` as a required status check.
 

@@ -53,7 +53,7 @@ def _build_commit_message() -> str:
         "- .github/workflows/pipeline.yml (test + build/deploy docker, auto-PR staging->production)",
     ]
     if AUTO_RELEASE == "yes":
-        lines.append("- .github/workflows/pr-checks.yml, release.yml (auto-release on merge to production)")
+        lines.append("- .github/workflows/pipeline.yml includes release-ready and release jobs (auto-release on merge to production)")
     if DOCS_TYPE == "sphinx":
         lines.append("- docs/ with Sphinx configuration and Shibuya theme")
     else:
@@ -134,15 +134,6 @@ if __name__ == "__main__":
 
     stamp_year()
     select_license("{{ cookiecutter.license }}")
-
-    if AUTO_RELEASE != "yes":
-        for f in ["pr-checks.yml", "release.yml"]:
-            path = os.path.join(".github", "workflows", f)
-            if os.path.exists(path):
-                os.remove(path)
-        actions_dir = os.path.join(".github", "actions")
-        if os.path.exists(actions_dir):
-            shutil.rmtree(actions_dir)
 
     if DOCS_TYPE == "simple":
         shutil.rmtree("docs", ignore_errors=True)

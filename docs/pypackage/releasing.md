@@ -24,8 +24,8 @@ If you chose `auto_release=yes`, releases are fully automated - no manual `make 
 
 The generated project includes two workflows:
 
-- **`pr-checks.yml`** - runs on every PR targeting `main`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub. PRs without a version bump pass unconditionally.
-- **`release.yml`** - runs on every push to `main`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
+- **`release-ready` job** (in `pipeline.yml`) - runs on every PR targeting `main`. If the branch contains a version bump, it checks that `CHANGELOG/<version>.md` exists and is filled in. Blocks the PR if the changelog is missing or still a stub. PRs without a version bump pass unconditionally.
+- **`release` job** (in `pipeline.yml`) - runs on every push to `main`. Tags the commit, pushes the tag, and creates a GitHub Release using the changelog as release notes.
 
 The branch protection rules applied during project generation include `release-ready` as a required status check.
 

@@ -68,7 +68,7 @@ def _build_commit_message() -> str:
         lines.append("- .github/workflows/publish.yml (PyPI trusted publishing)")
 
     if AUTO_RELEASE == "yes" and GIT_HOSTING == "github":
-        lines.append("- .github/workflows/pr-checks.yml, release.yml (auto-release on merge to main)")
+        lines.append("- .github/workflows/pipeline.yml includes release-ready and release jobs (auto-release on merge to main)")
 
     lines += [
         "- Makefile with development tasks",
@@ -388,15 +388,6 @@ if __name__ == "__main__":
             publish_yml = os.path.join(".github", "workflows", "publish.yml")
             if os.path.exists(publish_yml):
                 os.remove(publish_yml)
-
-        if AUTO_RELEASE != "yes":
-            for f in ["pr-checks.yml", "release.yml"]:
-                path = os.path.join(".github", "workflows", f)
-                if os.path.exists(path):
-                    os.remove(path)
-            actions_dir = os.path.join(".github", "actions")
-            if os.path.exists(actions_dir):
-                shutil.rmtree(actions_dir)
 
         if not _TEST_MODE:
             REPO_CREATED = False

@@ -44,6 +44,6 @@ Releases are automated - merging to `main` triggers the release workflow automat
 
    This updates `pyproject.toml`, commits the version change, and creates a `CHANGELOG/<version>.md` stub. Fill in the changelog, commit, and open a PR as normal.
 
-2. **The PR check** (`pr-checks.yml`) verifies that the changelog is filled in before the PR can be merged.
+2. **The `release-ready` job** (in `pipeline.yml`) verifies that the changelog is filled in before the PR can be merged.
 
-3. **On merge to `main`** - the release workflow (`release.yml`) runs automatically, tagging the commit and creating a GitHub release using the changelog as release notes.
+3. **On merge to `main`** - the `release` job (in `pipeline.yml`) runs automatically, tagging the commit and creating a GitHub release using the changelog as release notes.
