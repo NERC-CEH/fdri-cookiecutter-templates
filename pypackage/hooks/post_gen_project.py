@@ -13,7 +13,7 @@ import sys
 import urllib.error
 import urllib.request
 
-TEMPLATE = pathlib.Path("{{ cookiecutter._template }}")
+TEMPLATE = pathlib.Path("{{ cookiecutter._repo_dir }}")
 SHARED_HOOKS = TEMPLATE / "_shared" / "hooks"
 if not SHARED_HOOKS.exists():
     SHARED_HOOKS = TEMPLATE.parent / "_shared" / "hooks"

@@ -8,6 +8,7 @@ files that must not appear in pyservice projects.
 import shlex
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -36,6 +37,13 @@ def check_output_inside_dir(command: str, dirpath: str) -> bytes:
         Raw stdout bytes.
     """
     return subprocess.check_output(shlex.split(command), cwd=dirpath)
+
+
+def test_hook_uses_repo_dir_not_template():
+    """Hook must use _repo_dir (always a local path) not _template (may be a GitHub URL)."""
+    hook = (Path("pypackage") / "hooks" / "post_gen_project.py").read_text()
+    assert "cookiecutter._repo_dir" in hook
+    assert "cookiecutter._template" not in hook
 
 
 def test_pypackage_specific_files(cookies):
