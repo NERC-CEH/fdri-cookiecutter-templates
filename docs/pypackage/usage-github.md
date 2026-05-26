@@ -64,7 +64,7 @@ If the preflight passes, the tool will:
 4. Create a `pypi` environment (if `publish_to_pypi=yes`)
 5. Initialise git, make the initial commit, and push to `main`
 6. Create and push a `develop` branch, then set it as the default (if `git_flow=main_develop`)
-7. Apply branch protection rules to `main` (and `develop`) (if `git_flow` is `github_flow` or `main_develop`)
+7. Apply branch protection rules to `main` (and `develop`) (if `git_flow` is `github_flow` or `main_develop`), including the `release-ready` check (if `auto_release=yes`)
 
 If `gh` is not available, you'll see manual instructions in the output instead.
 

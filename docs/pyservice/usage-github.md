@@ -72,7 +72,7 @@ After generation, the hook:
 4. Enables GitHub Pages
 5. Initialises git and makes the initial commit
 6. Initialises git on `staging`, creates `production`, then pushes both to GitHub
-7. Applies branch protection to both branches (requires 1 approving review + passing CI)
+7. Applies branch protection to both branches (requires 1 approving review + passing CI), including the `release-ready` check (if `auto_release=yes`)
 
 If `gh` is not available, you get the local project and initial commit but must push manually.
 

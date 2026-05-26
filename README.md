@@ -32,7 +32,9 @@ Full documentation: https://nerc-ceh.github.io/fdri-cookiecutter-templates/
 
 ## Releasing a new version
 
-1. **On a branch** — bump the version and write the changelog:
+Releases are automated - merging to `main` triggers the release workflow automatically.
+
+1. **On a branch** - bump the version and write the changelog:
 
    ```bash
    make bump-patch   # 1.0.0 → 1.0.1
@@ -42,11 +44,6 @@ Full documentation: https://nerc-ceh.github.io/fdri-cookiecutter-templates/
 
    This updates `pyproject.toml`, commits the version change, and creates a `CHANGELOG/<version>.md` stub. Fill in the changelog, commit, and open a PR as normal.
 
-2. **After merging to `main`** — pull and create the release:
+2. **The `release-ready` job** (in `pipeline.yml`) verifies that the changelog is filled in before the PR can be merged.
 
-   ```bash
-   git checkout main && git pull
-   make release
-   ```
-
-   This tags the merged commit on `main`, pushes the tag, and creates a GitHub release using the changelog as release notes.
+3. **On merge to `main`** - the `release` job (in `pipeline.yml`) runs automatically, tagging the commit and creating a GitHub release using the changelog as release notes.
