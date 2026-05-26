@@ -84,7 +84,7 @@ jobs:
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [test-python, release-ready]
+    needs: [test-python]
     runs-on: ubuntu-latest
     permissions:
       contents: write
