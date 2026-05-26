@@ -68,7 +68,9 @@ def _build_commit_message() -> str:
         lines.append("- .github/workflows/publish.yml (PyPI trusted publishing)")
 
     if AUTO_RELEASE == "yes" and GIT_HOSTING == "github":
-        lines.append("- .github/workflows/pipeline.yml includes release-ready and release jobs (auto-release on merge to main)")
+        lines.append(
+            "- .github/workflows/pipeline.yml includes release-ready and release jobs (auto-release on merge to main)"
+        )
 
     lines += [
         "- Makefile with development tasks",

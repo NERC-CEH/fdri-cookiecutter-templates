@@ -53,7 +53,10 @@ def _build_commit_message() -> str:
         "- .github/workflows/pipeline.yml (test + build/deploy docker, auto-PR staging->production)",
     ]
     if AUTO_RELEASE == "yes":
-        lines.append("- .github/workflows/pipeline.yml includes release-ready and release jobs (auto-release on merge to production)")
+        lines.append(
+            "- .github/workflows/pipeline.yml includes release-ready and release jobs "
+            "(auto-release on merge to production)"
+        )
     if DOCS_TYPE == "sphinx":
         lines.append("- docs/ with Sphinx configuration and Shibuya theme")
     else:
