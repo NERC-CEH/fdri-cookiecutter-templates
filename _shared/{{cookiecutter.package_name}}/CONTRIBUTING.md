@@ -69,6 +69,12 @@ Ready to contribute? Here's how to set up {{ cookiecutter.package_name }} for lo
    cd {{ cookiecutter.package_name }}/
    uv sync
    ```
+
+1. Install the git hooks:
+
+   ```sh
+   make install-hooks
+   ```
 {% if git_flow == "simple" %}
 
 1. Create a branch for local development:
