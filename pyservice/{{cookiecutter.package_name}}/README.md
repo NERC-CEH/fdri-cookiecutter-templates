@@ -25,6 +25,11 @@ Documentation is built with [Sphinx](https://www.sphinx-doc.org/) and deployed t
 * **Preview locally:** `make docs-serve` (serves at http://localhost:8000)
 * **Build:** `make docs-build`
 {% endif %}
+## Versioning and Releases
+
+This project uses automatic patch-version bumping via a `pre-push` git hook. See
+[`docs/versioning_and_releases.md`](./docs/versioning_and_releases.md) for the full flow.
+
 ## Development
 
 To set up for local development:
@@ -33,6 +38,7 @@ To set up for local development:
 git clone git@github.com:{{ cookiecutter.repo_owner }}/{{ cookiecutter.package_name }}.git
 cd {{ cookiecutter.package_name }}
 uv sync
+make install-hooks
 ```
 
 Run tests:
